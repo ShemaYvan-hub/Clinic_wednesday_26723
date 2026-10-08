@@ -1,0 +1,56 @@
+{
+  "info": {
+    "name": "Kigali Clinic Quiz Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "A1: Patients by last name",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/patients/by-last-name?lastName=uwase" }
+    },
+    {
+      "name": "A2: Appointments by status",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/appointments/by-status?status=SCHEDULED" }
+    },
+    {
+      "name": "A3: Appointments in date range",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/appointments/between?start=2026-10-01&end=2026-10-31" }
+    },
+    {
+      "name": "A4: Save Appointment (No double booking)",
+      "request": { "method": "POST", "url": "http://localhost:8080/api/appointments/save" }
+    },
+    {
+      "name": "B1: Doctors by specialization",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/doctors/by-specialization?name=cardiology" }
+    },
+    {
+      "name": "B2: Doctors without an office",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/doctors/without-office" }
+    },
+    {
+      "name": "B3: Specializations nobody offers",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/specializations/unused" }
+    },
+    {
+      "name": "B4: Patients of a doctor",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/patients/of-doctor/YOUR_DOCTOR_ID_HERE" }
+    },
+    {
+      "name": "C1: Appointments per status",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/appointments/stats/by-status" }
+    },
+    {
+      "name": "C2: Frequent patients",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/patients/frequent?min=3" }
+    },
+    {
+      "name": "C3: Busiest office",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/offices/busiest" }
+    },
+    {
+      "name": "C4: Doctor is absent",
+      "request": { "method": "PATCH", "url": "http://localhost:8080/api/appointments/cancel-day?doctorId=YOUR_DOCTOR_ID_HERE&date=2026-10-20" }
+    }
+  ]
+}

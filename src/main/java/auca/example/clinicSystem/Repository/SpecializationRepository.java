@@ -1,0 +1,17 @@
+package auca.example.clinicSystem.Repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import auca.example.clinicSystem.model.Specialization;
+
+import java.util.List;
+import java.util.UUID;
+
+@Repository
+public interface SpecializationRepository extends JpaRepository<Specialization, UUID> {
+
+    // B3: Specializations nobody offers
+    @Query("SELECT s FROM Specialization s WHERE s.doctors IS EMPTY")
+    List<Specialization> findUnusedSpecializations();
+}
