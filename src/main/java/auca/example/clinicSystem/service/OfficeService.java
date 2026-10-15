@@ -41,19 +41,23 @@ public class OfficeService {
     }officeRepo.deleteById(id);
     return "Office deleted Successfully";
    }
-   // C3: Busiest office
+   
     public Object getBusiestOffice() {
         List<Object[]> offices = officeRepo.findBusiestOffices();
         if (offices.isEmpty()) {
             return "No appointments yet";
         }
         
-        // Get the top row
+        
         Object[] topOffice = offices.get(0);
         String name = (String) topOffice[0];
         Integer number = (Integer) topOffice[1];
         Long count = (Long) topOffice[2];
         
         return "Office: " + name + " (Number " + number + ") with " + count + " appointments";
+    }
+    
+    public List<Office> getFreeOffices() {
+        return officeRepo.findFreeOffices();
     }
 }

@@ -2,6 +2,8 @@ package auca.example.clinicSystem.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.util.Arrays;
 import auca.example.clinicSystem.Repository.PatientRepository;
 import auca.example.clinicSystem.Repository.DoctorRepository;
 import auca.example.clinicSystem.model.Patient;
@@ -16,7 +18,7 @@ public class PatientService {
     @Autowired
     private PatientRepository patientRepo;
 
-    // Added DoctorRepository to check if doctor exists for B4
+    
     @Autowired
     private DoctorRepository doctorRepo; 
 
@@ -29,7 +31,7 @@ public class PatientService {
         return patientRepo.findAll();
     }
 
-    // A1: Get patients by last name
+    
     public List<Patient> getPatientsByLastName(String lastName) {
         return patientRepo.findByLastNameIgnoreCaseOrderByFirstNameAsc(lastName);
     }
@@ -45,7 +47,7 @@ public class PatientService {
         }
         
         Patient patient = existing.get();
-        // Updated to use the new firstName and lastName fields
+        
         patient.setFirstName(updated.getFirstName());
         patient.setLastName(updated.getLastName());
         patient.setEmail(updated.getEmail());
@@ -64,16 +66,30 @@ public class PatientService {
         return "Patient Deleted Successfully";
     }
 
-    // B4: Patients of a doctor
+    
     public Object getPatientsOfDoctor(UUID doctorId) {
-        // Check if the doctor exists first
+       
         if (!doctorRepo.existsById(doctorId)) {
             return "The doctor with that id does not exist";
         }
         return patientRepo.findPatientsByDoctorId(doctorId);
     }
-    // C2: Frequent patients
+    
     public List<Patient> getFrequentPatients(long min) {
         return patientRepo.findFrequentPatients(min);
+    }
+    @Autowired
+    private auca.example.clinicSystem.Repository.AppointmentRepository appointmentRepo;
+
+    
+    public Object getUpcomingAppointments(String ssNumber) {
+        if (!patientRepo.existsBySsNumber(ssNumber)) {
+            return "That patient with that ssnumber does not exist";
+        }
+        List<auca.example.clinicSystem.model.AppointmentStatus> statuses = Arrays.asList(
+                auca.example.clinicSystem.model.AppointmentStatus.SCHEDULED, 
+                auca.example.clinicSystem.model.AppointmentStatus.CONFIRMED
+        );
+        return appointmentRepo.findByPatient_SsNumberAndDateGreaterThanEqualAndStatusInOrderByDateAsc(ssNumber, LocalDate.now(), statuses);
     }
 }

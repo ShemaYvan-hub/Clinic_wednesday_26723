@@ -1,0 +1,87 @@
+{
+  "info": {
+    "name": "Kigali Clinic Quiz 2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "A1: Add one specialization to a doctor",
+      "request": { "method": "PUT", "url": "http://localhost:8080/api/doctors/YOUR_DOCTOR_ID/specializations/YOUR_SPEC_ID" }
+    },
+    {
+      "name": "A2: Remove one specialization from a doctor",
+      "request": { "method": "DELETE", "url": "http://localhost:8080/api/doctors/YOUR_DOCTOR_ID/specializations/YOUR_SPEC_ID" }
+    },
+    {
+      "name": "A3: Free offices",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/offices/free" }
+    },
+    {
+      "name": "A4: Move a doctor to another office",
+      "request": { "method": "PATCH", "url": "http://localhost:8080/api/doctors/YOUR_DOCTOR_ID/office?officeNumber=104" }
+    },
+    {
+      "name": "B1: Safe booking",
+      "request": { 
+        "method": "POST", 
+        "url": "http://localhost:8080/api/appointments/save",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{ \"date\": \"2026-11-05\", \"reason\": \"Checkup\", \"status\": \"SCHEDULED\", \"doctor\": {\"id\": \"YOUR_DOCTOR_ID\"}, \"patient\": {\"id\": \"YOUR_PATIENT_ID\"} }" }
+      }
+    },
+    {
+      "name": "B2: Status flow",
+      "request": { "method": "PATCH", "url": "http://localhost:8080/api/appointments/YOUR_APPT_ID/status?status=COMPLETED" }
+    },
+    {
+      "name": "B3: Reschedule an appointment",
+      "request": { "method": "PATCH", "url": "http://localhost:8080/api/appointments/YOUR_APPT_ID/reschedule?newDate=2026-10-30" }
+    },
+    {
+      "name": "C1: Write a prescription",
+      "request": {
+        "method": "POST",
+        "url": "http://localhost:8080/api/prescriptions/save?appointmentId=YOUR_APPT_ID",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{ \"medicineName\": \"Amoxicillin\", \"dosage\": \"1 tablet, 3 times a day\", \"durationDays\": 7 }" }
+      }
+    },
+    {
+      "name": "C2: Prescriptions of an appointment",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/prescriptions/appointment/YOUR_APPT_ID" }
+    },
+    {
+      "name": "C3: Prescription history of a patient",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/prescriptions/patient/YOUR_PATIENT_SSNUMBER" }
+    },
+    {
+      "name": "C4: Update prescription",
+      "request": {
+        "method": "PUT",
+        "url": "http://localhost:8080/api/prescriptions/update/YOUR_PRESCRIPTION_ID",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{ \"medicineName\": \"Paracetamol\", \"dosage\": \"2 tablets\", \"durationDays\": 5 }" }
+      }
+    },
+    {
+      "name": "C4: Delete appointment (Protection check)",
+      "request": { "method": "DELETE", "url": "http://localhost:8080/api/appointments/delete/YOUR_APPT_ID" }
+    },
+    {
+      "name": "D1: Doctor's agenda for a day",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/doctors/YOUR_DOCTOR_ID/agenda?date=2026-10-20" }
+    },
+    {
+      "name": "D2: Upcoming appointments of a patient",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/patients/YOUR_PATIENT_SSNUMBER/upcoming" }
+    },
+    {
+      "name": "D3: Search doctors by name",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/doctors/search?name=gis" }
+    },
+    {
+      "name": "D4: Clinic dashboard",
+      "request": { "method": "GET", "url": "http://localhost:8080/api/dashboard/summary" }
+    }
+  ]
+}

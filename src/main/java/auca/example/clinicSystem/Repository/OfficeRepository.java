@@ -9,7 +9,12 @@ import org.springframework.stereotype.Repository;
 public interface OfficeRepository extends JpaRepository<Office, UUID> {
      Office findByOfficeNumber(String  officeNumber);
      List<Office> findByName(String name);
-     // C3: Busiest office
+     
     @Query("SELECT o.name, o.officeNumber, COUNT(a) FROM Appointment a JOIN a.doctor d JOIN d.office o GROUP BY o.name, o.officeNumber ORDER BY COUNT(a) DESC")
     List<Object[]> findBusiestOffices();
+
+    
+    @Query("SELECT o FROM Office o WHERE NOT EXISTS (SELECT d FROM Doctor d WHERE d.office = o) ORDER BY o.officeNumber ASC")
+    List<Office> findFreeOffices();
+
 }

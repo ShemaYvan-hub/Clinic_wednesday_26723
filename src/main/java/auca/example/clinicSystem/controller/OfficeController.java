@@ -51,9 +51,14 @@
             }
             return new ResponseEntity<>(message,HttpStatus.NOT_FOUND);
         }
-   // C3: Busiest office
+   
     @GetMapping("/busiest")
     public ResponseEntity<?> getBusiestOffice() {
         return new ResponseEntity<>(officeServ.getBusiestOffice(), HttpStatus.OK);
+    }
+    
+    @GetMapping("/free")
+    public ResponseEntity<List<Office>> getFreeOffices() {
+        return new ResponseEntity<>(officeServ.getFreeOffices(), HttpStatus.OK);
     }
     }

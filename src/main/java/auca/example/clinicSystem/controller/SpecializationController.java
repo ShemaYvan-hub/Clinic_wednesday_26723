@@ -24,8 +24,7 @@ public class SpecializationController {
     public ResponseEntity<List<Specialization>> getAllSpecializations() {
         return new ResponseEntity<>(specService.getAllSpecializations(), HttpStatus.OK);
     }
-    // B3: Specializations nobody offers
-   // B3: Specializations nobody offers
+   
     @GetMapping("/unused")
     public ResponseEntity<List<Specialization>> getUnusedSpecializations() {
         return new ResponseEntity<>(specService.getUnusedSpecializations(), HttpStatus.OK);

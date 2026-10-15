@@ -3,10 +3,14 @@ package auca.example.clinicSystem.service;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import auca.example.clinicSystem.Repository.DoctorRepository;
+import java.time.LocalDate;
 import auca.example.clinicSystem.Repository.OfficeRepository;
+import auca.example.clinicSystem.Repository.SpecializationRepository;
 import auca.example.clinicSystem.model.Doctor;
 import auca.example.clinicSystem.model.Office;
+import auca.example.clinicSystem.model.Specialization;
 
 @Service
 public class DoctorService {
@@ -21,8 +25,12 @@ public class DoctorService {
 
     @Autowired
     private DoctorRepository doctorRepo;
+    
     @Autowired
     private OfficeRepository officeRepo;
+    
+    @Autowired
+    private SpecializationRepository specRepo;
 
     public String saveDoctor(Doctor doctor) {
         if (doctorRepo.findByPhoneNumber(doctor.getPhoneNumber()) != null) {
@@ -44,21 +52,25 @@ public class DoctorService {
         doctorRepo.save(doctor);
         return SAVED;
     }
+
     public List<Doctor> getAllDoctors() {
         return doctorRepo.findAll();
     }
+
     public Optional<Doctor> getDoctorById(UUID id) {
         return doctorRepo.findById(id);
     }
+
     public List<Doctor> getDoctorsByName(String name) {
         return doctorRepo.findByName(name);
     }
-    // B1: Doctors by specialization
+
+    
     public List<Doctor> getDoctorsBySpecialization(String name) {
         return doctorRepo.findDoctorsBySpecializationNameIgnoreCase(name);
     }
 
-    // B2: Doctors without an office
+    
     public List<Doctor> getDoctorsWithoutOffice() {
         return doctorRepo.findDoctorsWithoutOffice();
     }
@@ -93,5 +105,81 @@ public class DoctorService {
         }
         doctorRepo.deleteById(id);
         return DELETED;
+    }
+
+    
+    public String addSpecialization(UUID doctorId, UUID specId) {
+        Optional<Doctor> dOpt = doctorRepo.findById(doctorId);
+        if (dOpt.isEmpty()) return "The doctor with that id does not exist";
+        
+        Optional<Specialization> sOpt = specRepo.findById(specId);
+        if (sOpt.isEmpty()) return "That specialization does not exist";
+
+        Doctor doc = dOpt.get();
+        Specialization spec = sOpt.get();
+
+        if (doc.getSpecializations().contains(spec)) {
+            return "The doctor already has that specialization";
+        }
+        
+        doc.getSpecializations().add(spec);
+        doctorRepo.save(doc);
+        return "Specialization added to the doctor";
+    }
+
+    
+    public String removeSpecialization(UUID doctorId, UUID specId) {
+        Optional<Doctor> dOpt = doctorRepo.findById(doctorId);
+        if (dOpt.isEmpty()) return "The doctor with that id does not exist";
+        
+        Optional<Specialization> sOpt = specRepo.findById(specId);
+        if (sOpt.isEmpty()) return "That specialization does not exist";
+
+        Doctor doc = dOpt.get();
+        Specialization spec = sOpt.get();
+
+        if (!doc.getSpecializations().contains(spec)) {
+            return "The doctor does not have that specialization";
+        }
+        
+        doc.getSpecializations().remove(spec);
+        doctorRepo.save(doc);
+        return "Specialization removed from the doctor";
+    }
+
+    
+    public String moveDoctor(UUID doctorId, String officeNumber) {
+        Optional<Doctor> dOpt = doctorRepo.findById(doctorId);
+        if (dOpt.isEmpty()) return "The doctor with that id does not exist";
+        
+        Office newOffice = officeRepo.findByOfficeNumber(officeNumber);
+        if (newOffice == null) return "The office with that office number does not exist";
+
+        Doctor doc = dOpt.get();
+
+        
+        Doctor owner = doctorRepo.findByOfficeId(newOffice.getId());
+        if (owner != null && !owner.getId().equals(doctorId)) {
+            return "That office is taken by other doctor";
+        }
+
+        doc.setOffice(newOffice);
+        doctorRepo.save(doc);
+        return "Office changed successfully";
+    }
+    @Autowired
+    private auca.example.clinicSystem.Repository.AppointmentRepository appointmentRepo;
+
+   
+    public Object getDoctorAgenda(UUID doctorId, LocalDate date) {
+        if (!doctorRepo.existsById(doctorId)) {
+            return "The doctor with that id does not exist";
+        }
+        return appointmentRepo.findByDoctor_IdAndDateAndStatusNot(doctorId, date, auca.example.clinicSystem.model.AppointmentStatus.CANCELLED);
+    }
+
+   
+    public List<Doctor> searchDoctors(String name) {
+        return doctorRepo.searchByName(name);
     }
 }

@@ -30,7 +30,7 @@ public class PatientController {
         return new ResponseEntity<>(patientServ.getAllPatients(),HttpStatus.OK);
     }
 
-    // A1: Find patients by last name
+    
     @GetMapping("/by-last-name")
     public ResponseEntity<List<Patient>> getPatientsByLastName(@RequestParam String lastName) {
         return new ResponseEntity<>(patientServ.getPatientsByLastName(lastName), HttpStatus.OK);
@@ -62,7 +62,7 @@ public class PatientController {
         }
         return new ResponseEntity<>(message,HttpStatus.NOT_FOUND);
     }
-   // B4: Patients of a doctor
+   
     @GetMapping("/of-doctor/{doctorId}")
     public ResponseEntity<?> getPatientsOfDoctor(@PathVariable UUID doctorId) {
         Object result = patientServ.getPatientsOfDoctor(doctorId);
@@ -72,9 +72,18 @@ public class PatientController {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    // C2: Frequent patients
+    
     @GetMapping("/frequent")
     public ResponseEntity<List<Patient>> getFrequentPatients(@RequestParam long min) {
         return new ResponseEntity<>(patientServ.getFrequentPatients(min), HttpStatus.OK);
+    }
+    
+    @GetMapping("/{ssNumber}/upcoming")
+    public ResponseEntity<?> getUpcomingAppointments(@PathVariable String ssNumber) {
+        Object result = patientServ.getUpcomingAppointments(ssNumber);
+        if (result instanceof String) {
+            return new ResponseEntity<>(result, HttpStatus.NOT_FOUND); 
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
